@@ -19,9 +19,12 @@ targetCompatibility = '1.6'
 
 defaultTasks 'clean', 'licenseFormat', 'check', 'build'
 
-organization = 'Christopher Newport University'
-url = 'https://github.com/Nunnery/Gooey'
-inceptionYear = '2014'
+ext.projectName = 'Gooey'
+ext.organization = 'Christopher Newport University'
+ext.url = 'https://github.com/Nunnery/Gooey'
+ext.inceptionYear = '2014'
+ext.packaging = 'jar'
+ext.description = 'An automated Swing testing framework for jUnit.'
 
 group = 'edu.cnu.cs'
 archivesBaseName = 'gooey'
