@@ -4,11 +4,12 @@ Gooey
 
 */'GOO-e/ -- adjective. 1. Soft and sticky. 2. Mawkishly sentimental.*
 <hr>
+
 #### Downloading Gooey
 * Download the [latest JAR] and add it to your classpath.
 * Download the project from Maven Central.
-<hr>
 
+<hr>
 #### Notes for developers
 * This repository is structured as a Gradle project.
 * API is not stable. Expect changes while development is underway.
