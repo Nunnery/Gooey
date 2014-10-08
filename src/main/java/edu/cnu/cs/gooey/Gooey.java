@@ -290,7 +290,7 @@ public class Gooey {
 		return getComponent( message, container, new GooeyCriteria() {
 			@Override
 			public boolean isAccepted(Component obj) {
-                return swing.isInstance(obj) && (name == null || name.equals(((Component) obj).getName()));
+                return swing.isInstance(obj) && (name == null || name.equals(obj.getName()));
             }
 		}, flags);
 	}
