@@ -1,4 +1,4 @@
-/**
+package edu.cnu.cs.gooey; /**
  * <p>Copyright: Copyright (c) 2013, JoSE Group, Christopher Newport University. 
  * Permission to use, copy, modify, distribute and sell this software and its
  * documentation for any purpose is hereby granted without fee, provided that
@@ -10,29 +10,15 @@
  * <p>Company: JoSE Group, Christopher Newport University</p>
  */
 
-import static org.junit.Assert.*;
+import org.junit.Test;
 
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
-
-import org.junit.Test;
-
-import edu.cnu.cs.gooey.Gooey;
-import edu.cnu.cs.gooey.GooeyDialog;
-import edu.cnu.cs.gooey.GooeyFrame;
+import static org.junit.Assert.*;
 
 public class GooeyTestFrameWithComponents {
 
