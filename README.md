@@ -6,7 +6,6 @@ Gooey [![Build Status](https://drone.io/github.com/Nunnery/Gooey/status.png)](ht
 <hr>
 #### Downloading Gooey
 # Download the [latest JAR] and add it to your classpath.
-# Download the [latest build] from [drone] and add it to your classpath.
 # Download the project from Maven Central.
 <hr>
 
@@ -19,4 +18,3 @@ Gooey [![Build Status](https://drone.io/github.com/Nunnery/Gooey/status.png)](ht
 [latest JAR]: https://github.com/Nunnery/Gooey/releases
 [robertoaflores]: https://github.com/robertoaflores/
 [Gooey]: https://github.com/robertoaflores/Gooey
-[drone]: https://drone.io/github.com/Nunnery/Gooey/files
