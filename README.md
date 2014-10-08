@@ -4,9 +4,9 @@ Gooey
 
 */'GOO-e/ -- adjective. 1. Soft and sticky. 2. Mawkishly sentimental.*
 <hr>
-#### Downloading Gooey's JAR
-1. Download the <a href="https://github.com/robertoaflores/Gooey/blob/master/Gooey/gooey.jar">latest JAR</a> build (select "View Raw" in next screen to download).
-2. Add downloaded JAR to your Eclipse project as an "External Archive" in the "Build Path".
+#### Downloading Gooey
+1. Download the [latest JAR].
+2. Add downloaded JAR to your build path for your project.
 3. Done!
 <hr>
 
@@ -14,3 +14,8 @@ Gooey
 * This repository is structured as a Gradle project.
 * API is not stable. Expect changes while development is underway.
 * No tutorials exist at this point. The ```src/examples/java``` folder has examples that you can follow.
+* This is a student fork of [robertoaflores]' [Gooey] project to make it easy to use in Maven projects.
+
+[latest JAR]: https://github.com/Nunnery/Gooey/releases
+[robertoaflores]: https://github.com/robertoaflores/
+[Gooey]: https://github.com/robertoaflores/Gooey
