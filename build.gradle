@@ -2,10 +2,14 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'maven'
+apply plugin: 'signing'
 
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
-version = '1.0.0-SNAPSHOT'
+
+group = "edu.cnu.cs"
+archivesBaseName = "gooey"
+version = '0.0.1-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -13,4 +17,71 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+signing {
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom.project {
+                name 'Gooey'
+                packaging 'jar'
+                // optionally artifactId can be defined here
+                description 'A library to automate Swing testing.'
+                url 'https://github.com/Nunnery/Gooey'
+
+                scm {
+                    connection 'scm:git:https://github.com/Nunnery/Gooey/'
+                    developerConnection 'scm:git:https://github.com/Nunnery/Gooey/'
+                    url 'https://github.com/Nunnery/Gooey/'
+                }
+
+                licenses {
+                    license {
+                        name 'The MIT License'
+                        url 'http://opensource.org/licenses/MIT'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'flores'
+                        name 'Roberto Flores'
+                        email 'roberto.flores@cnu.edu'
+                    }
+                }
+
+                contributors {
+                    contributor {
+                        id 'harrah'
+                        name 'Richard Harrah'
+                        email 'richard.harrah.13@cnu.edu'
+                    }
+                }
+            }
+        }
+    }
 }
