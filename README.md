@@ -1,13 +1,13 @@
-Gooey
+Gooey [![Build Status](https://drone.io/github.com/Nunnery/Gooey/status.png)](https://drone.io/github.com/Nunnery/Gooey/latest)
 =====
 **jUnit testing library for Java Swing applications.**
 
 */'GOO-e/ -- adjective. 1. Soft and sticky. 2. Mawkishly sentimental.*
 <hr>
 #### Downloading Gooey
-1. Download the [latest JAR].
-2. Add downloaded JAR to your build path for your project.
-3. Done!
+# Download the [latest JAR] and add it to your classpath.
+# Download the [latest build] from [drone] and add it to your classpath.
+# Download the project from Maven Central.
 <hr>
 
 #### Notes for developers
@@ -19,3 +19,4 @@ Gooey
 [latest JAR]: https://github.com/Nunnery/Gooey/releases
 [robertoaflores]: https://github.com/robertoaflores/
 [Gooey]: https://github.com/robertoaflores/Gooey
+[drone]: https://drone.io/github.com/Nunnery/Gooey/files
