@@ -1,11 +1,27 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
+    }
+}
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'maven'
 apply plugin: 'signing'
+apply plugin: 'license'
 
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
+sourceCompatibility = '1.6'
+targetCompatibility = '1.6'
+
+defaultTasks 'clean', 'licenseFormat', 'build'
+
+organization = 'Christopher Newport University'
+url = 'https://github.com/Nunnery/Gooey'
+inceptionYear = '2014'
 
 group = 'edu.cnu.cs'
 archivesBaseName = 'gooey'
@@ -69,6 +85,7 @@ uploadArchives {
                     license {
                         name 'The MIT License'
                         url 'http://opensource.org/licenses/MIT'
+                        distribution 'repo'
                     }
                 }
 
@@ -88,5 +105,24 @@ uploadArchives {
                 }
             }
         }
+    }
+}
+
+processResources {
+    // Include in final JAR
+    from 'LICENSE.txt'
+}
+
+license {
+    ext.name = project.name
+    ext.organization = project.organization
+    ext.url = project.url
+    ext.year = project.inceptionYear
+    header file('HEADER.txt')
+    sourceSets = project.sourceSets
+    ignoreFailures false
+    strictCheck true
+    mapping {
+        java = 'SLASHSTAR_STYLE'
     }
 }
