@@ -7,8 +7,8 @@ apply plugin: 'signing'
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
 
-group = "edu.cnu.cs"
-archivesBaseName = "gooey"
+group = 'edu.cnu.cs'
+archivesBaseName = 'gooey'
 version = '0.0.1-SNAPSHOT'
 
 repositories {
@@ -29,6 +29,7 @@ task sourcesJar(type: Jar) {
     from sourceSets.main.allSource
 }
 
+/**
 signing {
     sign configurations.archives
 }
@@ -85,3 +86,4 @@ uploadArchives {
         }
     }
 }
+*/
