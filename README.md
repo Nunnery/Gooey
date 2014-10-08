@@ -1,4 +1,4 @@
-Gooey [![Build Status](https://drone.io/github.com/Nunnery/Gooey/status.png)](https://drone.io/github.com/Nunnery/Gooey/latest)
+Gooey
 =====
 **jUnit testing library for Java Swing applications.**
 
