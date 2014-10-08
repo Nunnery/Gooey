@@ -17,7 +17,7 @@ apply plugin: 'license'
 sourceCompatibility = '1.6'
 targetCompatibility = '1.6'
 
-defaultTasks 'clean', 'licenseFormat', 'build'
+defaultTasks 'clean', 'licenseFormat', 'check', 'build'
 
 organization = 'Christopher Newport University'
 url = 'https://github.com/Nunnery/Gooey'
