@@ -14,8 +14,8 @@
  */
 package edu.cnu.cs.gooey;
 
-import java.awt.Component;
+import java.awt.*;
 
 public interface GooeyCriteria {
-	boolean isAccepted(Component obj);
+    boolean isAccepted(Component obj);
 }

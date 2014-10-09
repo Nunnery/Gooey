@@ -14,10 +14,10 @@
  */
 package edu.cnu.cs.gooey;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
 public abstract class GooeyFrame extends GooeyWindow<JFrame> {
-	public GooeyFrame() {
-		super( JFrame.class );
-	}
+    public GooeyFrame() {
+        super(JFrame.class);
+    }
 }

@@ -14,10 +14,10 @@
  */
 package edu.cnu.cs.gooey;
 
-import javax.swing.JDialog;
+import javax.swing.*;
 
 public abstract class GooeyDialog extends GooeyWindow<JDialog> {
-	public GooeyDialog() {
-		super( JDialog.class );
-	}
+    public GooeyDialog() {
+        super(JDialog.class);
+    }
 }

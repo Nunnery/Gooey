@@ -32,468 +32,492 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class GooeyTestFrameWithComponents {
 
-	// JFrame: Not displayed 
-	private static class MainClassJFrameNotDisplayed {
-		public static void main(String[] args) {
-			new JFrame();
-		}
-	}
-	@Test(expected=AssertionError.class)
-	public void testJFrameNotDisplayed() {
-		Gooey.capture(
-			new GooeyFrame() {
-				@Override
-				public void invoke() {
-					MainClassJFrameNotDisplayed.main( null );
-				}
-				@Override
-				public void handle(JFrame frame) {
-					throw new AssertionError( "No frame should be displayed" );
-				}
-			});
-	}
+    @Test(expected = AssertionError.class)
+    public void testJFrameNotDisplayed() {
+        Gooey.capture(
+                new GooeyFrame() {
+                    @Override
+                    public void invoke() {
+                        MainClassJFrameNotDisplayed.main(null);
+                    }
 
-	// JFrame Empty: Displayed 
-	private static class MainClassJFrameEmptyDisplayed {
-		public static void main(String[] args) {
-			SwingUtilities.invokeLater( new Runnable() {
-				@Override
-				public void run() {
-					JFrame frame = new JFrame( "My own title" );
-					frame.setSize( new Dimension( 150, 200 ));
-					frame.setVisible( true );
-				}
-			});
-		}
-	}
-	@Test
-	public void testJFrameEmptyDisplayed() {
-		Gooey.capture(
-			new GooeyFrame() {
-				@Override
-				public void invoke() {
-					MainClassJFrameEmptyDisplayed.main( null );
-				}
-				@Override
-				public void handle(JFrame frame) {
-					assertEquals ( "Incorrect result", "My own title",            frame.getTitle() );
-					assertEquals ( "Incorrect result", new Dimension( 150, 200 ), frame.getSize() );
-					assertTrue   ( "Incorrect result", frame.isShowing() );
-					frame.dispose();
-					assertFalse  ( "Incorrect result", frame.isShowing() );
-				}
-			});
-	}
+                    @Override
+                    public void handle(JFrame frame) {
+                        throw new AssertionError("No frame should be displayed");
+                    }
+                });
+    }
 
-	// JFrame With Components: Displayed 
-	@SuppressWarnings("serial")
-	private static class MainClassJFrameNotEmptyDisplayed extends JFrame {
-		public MainClassJFrameNotEmptyDisplayed() {
-			super("FlowLayout Example");
-			
-			setLayout( new FlowLayout());
-			
-			JTextField first, middle, last;
-			
-			add( new JLabel( "First name" ));
-			first = new JTextField( 10 );
-			first.setName( "name.first" );
-			add( first );
-			
-			add( new JLabel( "MI" ));
-			middle = new JTextField( 1 );
-			middle.setName( "name.middle" );
-			add( middle );
-			
-			add( new JLabel( "Last name" ));
-			last = new JTextField( 10 );
-			last.setName( "name.last" );
-			add( last );
-			
-			pack();
-		}
-		public static void main(String[] args) {
-			SwingUtilities.invokeLater( new Runnable() {
-				@Override
-				public void run() {
-					JFrame frame = new MainClassJFrameNotEmptyDisplayed();
-					frame.setVisible( true );
-				}
-			});
-		}
-	}
-	@Test
-	public void testJFrameDisplayed() {
-		Gooey.capture(
-			new GooeyFrame() {
-				@Override
-				public void invoke() {
-					MainClassJFrameNotEmptyDisplayed.main( null );
-				}
-				@Override
-				public void handle(JFrame frame) {
-					assertEquals ( "Incorrect result", "FlowLayout Example", frame.getTitle() );
+    @Test
+    public void testJFrameEmptyDisplayed() {
+        Gooey.capture(
+                new GooeyFrame() {
+                    @Override
+                    public void invoke() {
+                        MainClassJFrameEmptyDisplayed.main(null);
+                    }
 
-					JTextField nameFirst  = Gooey.getComponent( frame, JTextField.class, "name.first" );
-					JTextField nameMiddle = Gooey.getComponent( frame, JTextField.class, "name.middle" );
-					JTextField nameLast   = Gooey.getComponent( frame, JTextField.class, "name.last" );
+                    @Override
+                    public void handle(JFrame frame) {
+                        assertEquals("Incorrect result", "My own title", frame.getTitle());
+                        assertEquals("Incorrect result", new Dimension(150, 200), frame.getSize());
+                        assertTrue("Incorrect result", frame.isShowing());
+                        frame.dispose();
+                        assertFalse("Incorrect result", frame.isShowing());
+                    }
+                });
+    }
 
-					assertTrue   ( "Incorrect result", nameLast  != nameFirst );
-					assertTrue   ( "Incorrect result", nameLast  != nameMiddle );
-					assertTrue   ( "Incorrect result", nameFirst != nameMiddle );
+    @Test
+    public void testJFrameDisplayed() {
+        Gooey.capture(
+                new GooeyFrame() {
+                    @Override
+                    public void invoke() {
+                        MainClassJFrameNotEmptyDisplayed.main(null);
+                    }
 
-					List<JTextField> textFields = Gooey.getComponents( frame, JTextField.class );
-					assertEquals ( "Incorrect result", 3, textFields.size() );
-					assertTrue   ( "Incorrect result",    textFields.contains( nameFirst ));
-					assertTrue   ( "Incorrect result",    textFields.contains( nameMiddle ));
-					assertTrue   ( "Incorrect result",    textFields.contains( nameLast ));
+                    @Override
+                    public void handle(JFrame frame) {
+                        assertEquals("Incorrect result", "FlowLayout Example", frame.getTitle());
 
-					assertTrue   ( "Incorrect result", frame.isShowing() );
-					frame.dispose();
-					assertFalse  ( "Incorrect result", frame.isShowing() );
-				}
-			});
-	}
+                        JTextField nameFirst = Gooey.getComponent(frame, JTextField.class, "name.first");
+                        JTextField nameMiddle = Gooey.getComponent(frame, JTextField.class, "name.middle");
+                        JTextField nameLast = Gooey.getComponent(frame, JTextField.class, "name.last");
 
-	// JFrame With Named Components: Displayed 
-	@SuppressWarnings("serial")
-	private static class BMI extends JFrame {
-		private JTextField jtfWeight;
-		private JTextField jtfHeight;
-		private JButton    jbtGo;
-		private JLabel     jlbIndex;
-		
-		public BMI() {
-			super( "Body Mass Index" );
-			
-			setLayout( new GridLayout( 2, 1 ) );
-			
-			JPanel first = new JPanel( new FlowLayout() );
-			first .add( new JLabel( "Weight (lb)" ));
-			first .add( jtfWeight = new JTextField( 10 ));
-			first .add( new JLabel( "Height (ft)" ));
-			first .add( jtfHeight = new JTextField( 10 ));
-			first .add( jbtGo     = new JButton( "Go" ));
-			JPanel second = new JPanel( new FlowLayout() );
-			second.add( new JLabel( "Index:" ));
-			second.add( jlbIndex = new JLabel());
-			
-			jtfWeight.setName( "weight" );
-			jtfHeight.setName( "height" );
-			jlbIndex .setName( "index"  );
-			
-			add( first );
-			add( second );
-			
-			pack();
-			
-			setDefaultCloseOperation( DISPOSE_ON_CLOSE );
-			setLocationRelativeTo( null );
-			
-			jbtGo.addActionListener( new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent anEvent) {
-					double  weight = 0;
-					double  height = 0;
-					boolean ok     = false; 
-					try {
-						weight = Float.parseFloat( jtfWeight.getText() );
-						height = Float.parseFloat( jtfHeight.getText() );
-						ok     = weight > 0 && height > 0;
-					}
-					catch (NumberFormatException e) {
-					}
-					if (ok) {
-						double index = (weight * 4.88) / (height * height);
-						jlbIndex.setText( "" + Math.round( index * 100 ) / 100.0 );
-					}
-					else {
-						jlbIndex.setText( "" );
-						JOptionPane.showMessageDialog( BMI.this, "Please type positive numbers" );
-					}
-				}
-			});
-		}
-		public static void main(String[] args) {
-			SwingUtilities.invokeLater( new Runnable() {
-				@Override
-				public void run() {
-					JFrame f = new BMI();
-					f.setVisible( true );
-				}
-			});
-		}
-	}
-	@Test
-	public void testBMI() {
-		Gooey.capture(
-			new GooeyFrame() {
-				@Override
-				public void invoke() {
-					BMI.main( null );
-				}
-				@Override
-				public void handle(JFrame frame) {
-					assertEquals ( "Incorrect result", "Body Mass Index", frame.getTitle() );
+                        assertTrue("Incorrect result", nameLast != nameFirst);
+                        assertTrue("Incorrect result", nameLast != nameMiddle);
+                        assertTrue("Incorrect result", nameFirst != nameMiddle);
 
-					JTextField weight = Gooey.getComponent( frame, JTextField.class, "weight" );
-					JTextField height = Gooey.getComponent( frame, JTextField.class, "height" );
-					JLabel     index  = Gooey.getComponent( frame, JLabel.class,     "index" );
-					JButton    go     = Gooey.getButton   ( frame, "Go" );
-					JLabel     lb     = Gooey.getLabel    ( frame, "Weight (lb)" );
-					JLabel     ft     = Gooey.getLabel    ( frame, "Height (ft)" );
+                        List<JTextField> textFields = Gooey.getComponents(frame, JTextField.class);
+                        assertEquals("Incorrect result", 3, textFields.size());
+                        assertTrue("Incorrect result", textFields.contains(nameFirst));
+                        assertTrue("Incorrect result", textFields.contains(nameMiddle));
+                        assertTrue("Incorrect result", textFields.contains(nameLast));
 
-					assertTrue   ( "Incorrect result", weight != height );
+                        assertTrue("Incorrect result", frame.isShowing());
+                        frame.dispose();
+                        assertFalse("Incorrect result", frame.isShowing());
+                    }
+                });
+    }
 
-					List<JTextField> textFields = Gooey.getComponents( frame, JTextField.class );
-					assertEquals ( "Incorrect result", 2, textFields.size() );
-					assertTrue   ( "Incorrect result",    textFields.contains( weight ));
-					assertTrue   ( "Incorrect result",    textFields.contains( height ));
+    @Test
+    public void testBMI() {
+        Gooey.capture(
+                new GooeyFrame() {
+                    @Override
+                    public void invoke() {
+                        BMI.main(null);
+                    }
 
-					List<JLabel> labels = Gooey.getComponents( frame, JLabel.class );
-					assertEquals ( "Incorrect result", 4, labels.size() );
-					assertTrue   ( "Incorrect result",    labels.contains( index ));
-					assertTrue   ( "Incorrect result",    labels.contains( lb ));
-					assertTrue   ( "Incorrect result",    labels.contains( ft ));
+                    @Override
+                    public void handle(JFrame frame) {
+                        assertEquals("Incorrect result", "Body Mass Index", frame.getTitle());
 
-					List<JButton> buttons = Gooey.getComponents( frame, JButton.class );
-					assertEquals ( "Incorrect result", 1, buttons.size() );
-					assertTrue   ( "Incorrect result",    buttons.contains( go ));
+                        JTextField weight = Gooey.getComponent(frame, JTextField.class, "weight");
+                        JTextField height = Gooey.getComponent(frame, JTextField.class, "height");
+                        JLabel index = Gooey.getComponent(frame, JLabel.class, "index");
+                        JButton go = Gooey.getButton(frame, "Go");
+                        JLabel lb = Gooey.getLabel(frame, "Weight (lb)");
+                        JLabel ft = Gooey.getLabel(frame, "Height (ft)");
 
-					assertEquals ( "Incorrect result", "",     index.getText() );
-					weight.setText( "120" );
-					height.setText( "5.411" );
-					go.doClick();
-					assertEquals ( "Incorrect result", "20.0", index.getText() );
+                        assertTrue("Incorrect result", weight != height);
 
-					assertTrue   ( "Incorrect result", frame.isShowing() );
-					frame.dispose();
-					assertFalse  ( "Incorrect result", frame.isShowing() );
-				}
-			});
-	}
+                        List<JTextField> textFields = Gooey.getComponents(frame, JTextField.class);
+                        assertEquals("Incorrect result", 2, textFields.size());
+                        assertTrue("Incorrect result", textFields.contains(weight));
+                        assertTrue("Incorrect result", textFields.contains(height));
 
-	// JFrame that displays a dialog 
-	@SuppressWarnings("serial")
-	private static class MainClassJFrameDisplaysMessageDialog extends JFrame {
-		public MainClassJFrameDisplaysMessageDialog() {
-			super();
-			
-			setLayout( new FlowLayout() );
-			
-			JButton jbtGo = new JButton( "Go" );
-			add(    jbtGo );
-			
-			pack();
-			
-			setDefaultCloseOperation( DISPOSE_ON_CLOSE );
-			setLocationRelativeTo( null );
-			
-			jbtGo.addActionListener( new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent anEvent) {
-					JOptionPane.showMessageDialog( MainClassJFrameDisplaysMessageDialog.this, "Yeah" );
-				}
-			});
-		}
-		public static void main(String[] args) {
-			JFrame f = new MainClassJFrameDisplaysMessageDialog();
-			f.setVisible( true );
-		}
-	}
-	@Test
-	public void testMainClassJFrameDisplaysMessageDialogOnce() {
-		Gooey.capture(
-			new GooeyFrame() {
-				@Override
-				public void invoke() {
-					MainClassJFrameDisplaysMessageDialog.main( null );
-				}
-				@Override
-				public void handle(JFrame frame) {
-					assertTrue   ( "Incorrect result",     frame.isShowing() );
-					assertEquals ( "Incorrect result", "", frame.getTitle() );
+                        List<JLabel> labels = Gooey.getComponents(frame, JLabel.class);
+                        assertEquals("Incorrect result", 4, labels.size());
+                        assertTrue("Incorrect result", labels.contains(index));
+                        assertTrue("Incorrect result", labels.contains(lb));
+                        assertTrue("Incorrect result", labels.contains(ft));
 
-					final JButton go = Gooey.getButton( frame, "Go" );
+                        List<JButton> buttons = Gooey.getComponents(frame, JButton.class);
+                        assertEquals("Incorrect result", 1, buttons.size());
+                        assertTrue("Incorrect result", buttons.contains(go));
 
-					List<JButton> buttons = Gooey.getComponents( frame, JButton.class );
-					assertEquals ( "Incorrect result", 1, buttons.size() );
-					assertTrue   ( "Incorrect result",    buttons.contains( go ));
+                        assertEquals("Incorrect result", "", index.getText());
+                        weight.setText("120");
+                        height.setText("5.411");
+                        go.doClick();
+                        assertEquals("Incorrect result", "20.0", index.getText());
 
-					// press GO once
-					Gooey.capture(
-						new GooeyDialog() {
-							@Override
-							public void invoke() {
-								go.doClick();
-							}
-							@Override
-							public void handle(JDialog dialog) {
-								assertTrue ( "dialog should be showing", dialog.isShowing() );
-								Gooey.getButton( dialog, "OK" ).doClick();
-								assertFalse( "dialog should be hidden",  dialog.isShowing() );
-							}
-						});
-					// dispose frame
-					assertTrue ( "Incorrect result", frame.isShowing() );
-					frame.dispose();
-					assertFalse( "Incorrect result", frame.isShowing() );
-				}
-			});
-	}
-	@Test
-	public void testMainClassJFrameDisplaysMessageDialogTwice() {
-		Gooey.capture(
-			new GooeyFrame() {
-				@Override
-				public void invoke() {
-					MainClassJFrameDisplaysMessageDialog.main( null );
-				}
-				@Override
-				public void handle(JFrame frame) {
-					assertTrue   ( "Incorrect result",     frame.isShowing() );
-					assertEquals ( "Incorrect result", "", frame.getTitle() );
+                        assertTrue("Incorrect result", frame.isShowing());
+                        frame.dispose();
+                        assertFalse("Incorrect result", frame.isShowing());
+                    }
+                });
+    }
 
-					final JButton go = Gooey.getButton( frame, "Go" );
+    @Test
+    public void testMainClassJFrameDisplaysMessageDialogOnce() {
+        Gooey.capture(
+                new GooeyFrame() {
+                    @Override
+                    public void invoke() {
+                        MainClassJFrameDisplaysMessageDialog.main(null);
+                    }
 
-					List<JButton> buttons = Gooey.getComponents( frame, JButton.class );
-					assertEquals ( "Incorrect result", 1, buttons.size() );
-					assertTrue   ( "Incorrect result",    buttons.contains( go ));
+                    @Override
+                    public void handle(JFrame frame) {
+                        assertTrue("Incorrect result", frame.isShowing());
+                        assertEquals("Incorrect result", "", frame.getTitle());
 
-					// press GO five times in sequence
-					for (int i = 0; i < 5; i++) {
-						Gooey.capture(
-							new GooeyDialog() {
-								@Override
-								public void invoke() {
-									go.doClick();
-								}
-								@Override
-								public void handle(JDialog dialog) {
-									assertTrue ( "dialog should be showing", dialog.isShowing() );
-									Gooey.getButton( dialog, "OK" ).doClick();
-									assertFalse( "dialog should be hidden",  dialog.isShowing() );
-								}
-							});
-						assertTrue( "Incorrect result", frame.isShowing() );
-					}
-					// dispose frame
-					assertTrue  ( "Incorrect result", frame.isShowing() );
-					frame.dispose();
-					assertFalse ( "Incorrect result", frame.isShowing() );
-				}
-			});
-	}
-	
-	// JFrame that displays itself (potentially many times) 
-	private static class MainClassJFrameDisplaysItself {
-		public static void main(String[] args) {
-			JFrame f = new JFrame();
-			f.setLayout( new FlowLayout() );
-			
-			JButton jbtGo = new JButton( "Go" );
-			f.add(  jbtGo );
-			
-			f.pack();
-			
-			jbtGo.addActionListener( new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent anEvent) {
-					SwingUtilities.invokeLater( new Runnable() {
-						@Override
-						public void run() {
-							main( new String[]{ } );
-						}
-					});
-				}
-			});
-			f.setVisible( true );
-		}
-	}
-	@Test
-	public void testMainClassJFrameDisplayItself() {
-		Gooey.capture(
-			new GooeyFrame() {
-				@Override
-				public void invoke() {
-					MainClassJFrameDisplaysItself.main( null );
-				}
-				@Override
-				public void handle(JFrame frame) {
-					clickGo( frame, 5 );
-				}
-				private void clickGo(JFrame frame, final int clicksLeft) {
-					if (clicksLeft > 0) {
-						assertTrue   ( "Incorrect result",     frame.isShowing() );
-						assertEquals ( "Incorrect result", "", frame.getTitle() );
+                        final JButton go = Gooey.getButton(frame, "Go");
 
-						final JButton go = Gooey.getButton( frame, "Go" );
+                        List<JButton> buttons = Gooey.getComponents(frame, JButton.class);
+                        assertEquals("Incorrect result", 1, buttons.size());
+                        assertTrue("Incorrect result", buttons.contains(go));
 
-						List<JButton> buttons = Gooey.getComponents( frame, JButton.class );
-						assertEquals ( "Incorrect result", 1, buttons.size() );
-						assertTrue   ( "Incorrect result",    buttons.contains( go ));
+                        // press GO once
+                        Gooey.capture(
+                                new GooeyDialog() {
+                                    @Override
+                                    public void invoke() {
+                                        go.doClick();
+                                    }
 
-						Gooey.capture(
-							new GooeyFrame() {
-								@Override
-								public void invoke() {
-									go.doClick();
-								}
-								@Override
-								public void handle(JFrame frame) {
-									clickGo( frame, clicksLeft -1 );
-								}										
-							});
-						frame.dispose();
-						assertFalse( "Incorrect result", frame.isShowing() );
-					}
-				}
-			});
-	}
-	@Test(expected=RuntimeException.class)
-	public void testMainClassJFrameDisplayItselfSeveralTimesBeforeThrowingException() {
-		Gooey.capture(
-			new GooeyFrame() {
-				@Override
-				public void invoke() {
-					MainClassJFrameDisplaysItself.main( null );
-				}
-				@Override
-				public void handle(JFrame frame) {
-					clickGo( frame, 5 );
-				}
-				private void clickGo(JFrame frame, final int clicksLeft) {
-					if (clicksLeft > 0) {
-						assertTrue   ( "Incorrect result",     frame.isShowing() );
-						assertEquals ( "Incorrect result", "", frame.getTitle() );
+                                    @Override
+                                    public void handle(JDialog dialog) {
+                                        assertTrue("dialog should be showing", dialog.isShowing());
+                                        Gooey.getButton(dialog, "OK").doClick();
+                                        assertFalse("dialog should be hidden", dialog.isShowing());
+                                    }
+                                });
+                        // dispose frame
+                        assertTrue("Incorrect result", frame.isShowing());
+                        frame.dispose();
+                        assertFalse("Incorrect result", frame.isShowing());
+                    }
+                });
+    }
 
-						final JButton   go      = Gooey.getButton( frame, "Go" );
-						List<JButton> buttons = Gooey.getComponents( frame, JButton.class );
-						assertEquals ( "Incorrect result", 1, buttons.size() );
-						assertTrue   ( "Incorrect result",    buttons.contains( go ));
+    @Test
+    public void testMainClassJFrameDisplaysMessageDialogTwice() {
+        Gooey.capture(
+                new GooeyFrame() {
+                    @Override
+                    public void invoke() {
+                        MainClassJFrameDisplaysMessageDialog.main(null);
+                    }
 
-						Gooey.capture(
-							new GooeyFrame() {
-								@Override
-								public void invoke() {
-									go.doClick();
-								}
-								@Override
-								public void handle(JFrame frame) {
-									clickGo( frame, clicksLeft -1 );
-								}										
-							});
-						frame.dispose();
-						assertFalse( "Incorrect result", frame.isShowing() );
-					}
-					else {
-						throw new RuntimeException();
-					}
-				}
-			});
-	}
+                    @Override
+                    public void handle(JFrame frame) {
+                        assertTrue("Incorrect result", frame.isShowing());
+                        assertEquals("Incorrect result", "", frame.getTitle());
+
+                        final JButton go = Gooey.getButton(frame, "Go");
+
+                        List<JButton> buttons = Gooey.getComponents(frame, JButton.class);
+                        assertEquals("Incorrect result", 1, buttons.size());
+                        assertTrue("Incorrect result", buttons.contains(go));
+
+                        // press GO five times in sequence
+                        for (int i = 0; i < 5; i++) {
+                            Gooey.capture(
+                                    new GooeyDialog() {
+                                        @Override
+                                        public void invoke() {
+                                            go.doClick();
+                                        }
+
+                                        @Override
+                                        public void handle(JDialog dialog) {
+                                            assertTrue("dialog should be showing", dialog.isShowing());
+                                            Gooey.getButton(dialog, "OK").doClick();
+                                            assertFalse("dialog should be hidden", dialog.isShowing());
+                                        }
+                                    });
+                            assertTrue("Incorrect result", frame.isShowing());
+                        }
+                        // dispose frame
+                        assertTrue("Incorrect result", frame.isShowing());
+                        frame.dispose();
+                        assertFalse("Incorrect result", frame.isShowing());
+                    }
+                });
+    }
+
+    @Test
+    public void testMainClassJFrameDisplayItself() {
+        Gooey.capture(
+                new GooeyFrame() {
+                    private void clickGo(JFrame frame, final int clicksLeft) {
+                        if (clicksLeft > 0) {
+                            assertTrue("Incorrect result", frame.isShowing());
+                            assertEquals("Incorrect result", "", frame.getTitle());
+
+                            final JButton go = Gooey.getButton(frame, "Go");
+
+                            List<JButton> buttons = Gooey.getComponents(frame, JButton.class);
+                            assertEquals("Incorrect result", 1, buttons.size());
+                            assertTrue("Incorrect result", buttons.contains(go));
+
+                            Gooey.capture(
+                                    new GooeyFrame() {
+                                        @Override
+                                        public void invoke() {
+                                            go.doClick();
+                                        }
+
+                                        @Override
+                                        public void handle(JFrame frame) {
+                                            clickGo(frame, clicksLeft - 1);
+                                        }
+                                    });
+                            frame.dispose();
+                            assertFalse("Incorrect result", frame.isShowing());
+                        }
+                    }                    @Override
+                    public void invoke() {
+                        MainClassJFrameDisplaysItself.main(null);
+                    }
+
+                    @Override
+                    public void handle(JFrame frame) {
+                        clickGo(frame, 5);
+                    }
+
+
+                });
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testMainClassJFrameDisplayItselfSeveralTimesBeforeThrowingException() {
+        Gooey.capture(
+                new GooeyFrame() {
+                    private void clickGo(JFrame frame, final int clicksLeft) {
+                        if (clicksLeft > 0) {
+                            assertTrue("Incorrect result", frame.isShowing());
+                            assertEquals("Incorrect result", "", frame.getTitle());
+
+                            final JButton go = Gooey.getButton(frame, "Go");
+                            List<JButton> buttons = Gooey.getComponents(frame, JButton.class);
+                            assertEquals("Incorrect result", 1, buttons.size());
+                            assertTrue("Incorrect result", buttons.contains(go));
+
+                            Gooey.capture(
+                                    new GooeyFrame() {
+                                        @Override
+                                        public void invoke() {
+                                            go.doClick();
+                                        }
+
+                                        @Override
+                                        public void handle(JFrame frame) {
+                                            clickGo(frame, clicksLeft - 1);
+                                        }
+                                    });
+                            frame.dispose();
+                            assertFalse("Incorrect result", frame.isShowing());
+                        } else {
+                            throw new RuntimeException();
+                        }
+                    }                    @Override
+                    public void invoke() {
+                        MainClassJFrameDisplaysItself.main(null);
+                    }
+
+                    @Override
+                    public void handle(JFrame frame) {
+                        clickGo(frame, 5);
+                    }
+
+
+                });
+    }
+
+    // JFrame: Not displayed
+    private static class MainClassJFrameNotDisplayed {
+        public static void main(String[] args) {
+            new JFrame();
+        }
+    }
+
+    // JFrame Empty: Displayed
+    private static class MainClassJFrameEmptyDisplayed {
+        public static void main(String[] args) {
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    JFrame frame = new JFrame("My own title");
+                    frame.setSize(new Dimension(150, 200));
+                    frame.setVisible(true);
+                }
+            });
+        }
+    }
+
+    // JFrame With Components: Displayed
+    @SuppressWarnings("serial")
+    private static class MainClassJFrameNotEmptyDisplayed extends JFrame {
+        public MainClassJFrameNotEmptyDisplayed() {
+            super("FlowLayout Example");
+
+            setLayout(new FlowLayout());
+
+            JTextField first, middle, last;
+
+            add(new JLabel("First name"));
+            first = new JTextField(10);
+            first.setName("name.first");
+            add(first);
+
+            add(new JLabel("MI"));
+            middle = new JTextField(1);
+            middle.setName("name.middle");
+            add(middle);
+
+            add(new JLabel("Last name"));
+            last = new JTextField(10);
+            last.setName("name.last");
+            add(last);
+
+            pack();
+        }
+
+        public static void main(String[] args) {
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    JFrame frame = new MainClassJFrameNotEmptyDisplayed();
+                    frame.setVisible(true);
+                }
+            });
+        }
+    }
+
+    // JFrame With Named Components: Displayed
+    @SuppressWarnings("serial")
+    private static class BMI extends JFrame {
+        private JTextField jtfWeight;
+        private JTextField jtfHeight;
+        private JButton jbtGo;
+        private JLabel jlbIndex;
+
+        public BMI() {
+            super("Body Mass Index");
+
+            setLayout(new GridLayout(2, 1));
+
+            JPanel first = new JPanel(new FlowLayout());
+            first.add(new JLabel("Weight (lb)"));
+            first.add(jtfWeight = new JTextField(10));
+            first.add(new JLabel("Height (ft)"));
+            first.add(jtfHeight = new JTextField(10));
+            first.add(jbtGo = new JButton("Go"));
+            JPanel second = new JPanel(new FlowLayout());
+            second.add(new JLabel("Index:"));
+            second.add(jlbIndex = new JLabel());
+
+            jtfWeight.setName("weight");
+            jtfHeight.setName("height");
+            jlbIndex.setName("index");
+
+            add(first);
+            add(second);
+
+            pack();
+
+            setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            setLocationRelativeTo(null);
+
+            jbtGo.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent anEvent) {
+                    double weight = 0;
+                    double height = 0;
+                    boolean ok = false;
+                    try {
+                        weight = Float.parseFloat(jtfWeight.getText());
+                        height = Float.parseFloat(jtfHeight.getText());
+                        ok = weight > 0 && height > 0;
+                    } catch (NumberFormatException e) {
+                    }
+                    if (ok) {
+                        double index = (weight * 4.88) / (height * height);
+                        jlbIndex.setText("" + Math.round(index * 100) / 100.0);
+                    } else {
+                        jlbIndex.setText("");
+                        JOptionPane.showMessageDialog(BMI.this, "Please type positive numbers");
+                    }
+                }
+            });
+        }
+
+        public static void main(String[] args) {
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    JFrame f = new BMI();
+                    f.setVisible(true);
+                }
+            });
+        }
+    }
+
+    // JFrame that displays a dialog
+    @SuppressWarnings("serial")
+    private static class MainClassJFrameDisplaysMessageDialog extends JFrame {
+        public MainClassJFrameDisplaysMessageDialog() {
+            super();
+
+            setLayout(new FlowLayout());
+
+            JButton jbtGo = new JButton("Go");
+            add(jbtGo);
+
+            pack();
+
+            setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            setLocationRelativeTo(null);
+
+            jbtGo.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent anEvent) {
+                    JOptionPane.showMessageDialog(MainClassJFrameDisplaysMessageDialog.this, "Yeah");
+                }
+            });
+        }
+
+        public static void main(String[] args) {
+            JFrame f = new MainClassJFrameDisplaysMessageDialog();
+            f.setVisible(true);
+        }
+    }
+
+    // JFrame that displays itself (potentially many times)
+    private static class MainClassJFrameDisplaysItself {
+        public static void main(String[] args) {
+            JFrame f = new JFrame();
+            f.setLayout(new FlowLayout());
+
+            JButton jbtGo = new JButton("Go");
+            f.add(jbtGo);
+
+            f.pack();
+
+            jbtGo.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent anEvent) {
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            main(new String[]{});
+                        }
+                    });
+                }
+            });
+            f.setVisible(true);
+        }
+    }
 }
