@@ -30,6 +30,8 @@ group = 'edu.cnu.cs'
 archivesBaseName = 'gooey'
 version = '1.0.1-SNAPSHOT'
 
+isRelease = !version.endsWith("SNAPSHOT")
+
 repositories {
     mavenCentral()
 }
@@ -55,7 +57,9 @@ artifacts {
 }
 
 signing {
-    sign configurations.archives
+    if (isRelease) {
+        sign configurations.archives
+    }
 }
 
 uploadArchives {
