@@ -141,7 +141,7 @@ public class GooeyTestJOptionPane {
     // JOptionPane: Input
     private static class MainClassJOptionPaneInputDialog {
         public static void main(String[] args) {
-            JOptionPane.showInputDialog(null, "Type your name", "Please", JOptionPane.OK_CANCEL_OPTION);
+            JOptionPane.showInputDialog(null, "Type your name", "Please", JOptionPane.QUESTION_MESSAGE);
         }
     }
 }
