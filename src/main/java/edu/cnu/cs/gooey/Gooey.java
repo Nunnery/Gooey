@@ -24,14 +24,14 @@ import java.util.List;
 /**
  * <p>Title: Gooey</p>
  * <p>Description: Gooey is a jUnit test library of static methods for capturing windows and retrieving their
- * components.<br/>
+ * components.
  * Methods in this class are designed to be called in JUnit tests. There
  * are methods to capture displayed windows and query their
  * components. Once a window is captured, methods can retrieve any component by type, by name,
  * and (in the case of buttons, menus, tabs and labels) by displayed text.
  * </p>
  *
- * @author <a hef="http://www.pcs.cnu.edu/~flores/">Roberto A. Flores</a>
+ * @author <a href="http://www.pcs.cnu.edu/~flores/">Roberto A. Flores</a>
  * @version 0.1
  * @see GooeyWindow interface to access a captured window.
  */
