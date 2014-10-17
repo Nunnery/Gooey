@@ -131,13 +131,3 @@ license {
         java = 'SLASHSTAR_STYLE'
     }
 }
-
-task artifacts {
-    doFirst {
-        configurations.findAll().each { config ->
-            println "${config}:"
-            config.allArtifacts.getFiles().each { file -> println "  " + file}
-            println ' '
-        }
-    }
-}
