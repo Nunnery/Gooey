@@ -132,6 +132,12 @@ license {
     }
 }
 
-task show << {
-    println "Build output: " + relativePath(compileJava.destinationDir)
+task artifacts {
+    doFirst {
+        configurations.findAll().each { config ->
+            println "${config}:"
+            config.allArtifacts.getFiles().each { file -> println "  " + file}
+            println ' '
+        }
+    }
 }
