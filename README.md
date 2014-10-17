@@ -1,4 +1,4 @@
-Gooey
+Gooey [![Build Status](https://snap-ci.com/Nunnery/Gooey/branch/master/build_image)](https://snap-ci.com/Nunnery/Gooey/branch/master)
 =====
 **jUnit testing library for Java Swing applications.**
 
