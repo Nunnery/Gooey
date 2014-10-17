@@ -131,3 +131,7 @@ license {
         java = 'SLASHSTAR_STYLE'
     }
 }
+
+task show << {
+    println "Build output: " + relativePath(compileJava.destinationDir)
+}
